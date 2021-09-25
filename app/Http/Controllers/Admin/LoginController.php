@@ -51,7 +51,7 @@ class LoginController extends Controller
     }
 
     //处理用户登录
-    public function doLogin($request){
+    public function doLogin(Request $request){
         $input = $request->except('_token');
         $rule = [
             'username'=>'required|between:4,18',
@@ -118,5 +118,11 @@ class LoginController extends Controller
     //欢迎页
     public function welcome(){
         return view('admin.welcome');
+    }
+
+    //退出登录
+    public function logout(){
+        session()->flush();
+        return redirect('admin/login');
     }
 }
