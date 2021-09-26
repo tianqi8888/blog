@@ -30,7 +30,7 @@
     </div>
     <div class="x-body">
       <div class="layui-row">
-        <form class="layui-form layui-col-md12 x-so" method="get" action="{{url('admin/user')}}">
+        <form class="layui-form layui-col-md12 x-so" method="get" action="{{url('admin/role')}}">
 <!--          <input class="layui-input" placeholder="开始日" name="start" id="start">
           <input class="layui-input" placeholder="截止日" name="end" id="end">-->
           <div class="layui-input-inline">
@@ -40,14 +40,13 @@
               <option value="5" @if($request->input('num') == 5) selected @endif>5</option>
             </select>
           </div>
-          <input type="text" name="username" value="{{$request->input('username')}}"  placeholder="请输入用户名" autocomplete="off" class="layui-input">
-          <input type="text" name="email" value="{{$request->input('email')}}"  placeholder="邮箱" autocomplete="off" class="layui-input">
+          <input type="text" name="role_name" value="{{$request->input('role_name')}}"  placeholder="请输入角色名" autocomplete="off" class="layui-input">
           <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
         </form>
       </div>
       <xblock>
         <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
-        <button class="layui-btn" onclick="x_admin_show('添加用户','{{url('admin/user/create')}}',600,400)"><i class="layui-icon"></i>添加</button>
+        <button class="layui-btn" onclick="x_admin_show('添加角色','{{url('admin/role/create')}}',600,400)"><i class="layui-icon"></i>添加</button>
         <span class="x-right" style="line-height:40px">共有数据：88 条</span>
       </xblock>
       <table class="layui-table">
@@ -57,36 +56,34 @@
               <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
             </th>
             <th>ID</th>
-            <th>用户名</th>
-            <th>邮箱</th>
+            <th>角色名称</th>
             <th>状态</th>
             <th>操作</th></tr>
         </thead>
         <tbody>
-        @foreach($user as $v)
+        @foreach($role as $v)
           <tr>
             <td>
-              <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='{{$v->user_id}}'><i class="layui-icon">&#xe605;</i></div>
+              <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='{{$v->id}}'><i class="layui-icon">&#xe605;</i></div>
             </td>
             <td>{{ $v->id }}</td>
-            <td>{{ $v->user_name }}</td>
-            <td>{{ $v->email }}</td>
+            <td>{{ $v->role_name }}</td>
             <td class="td-status">
               <span class="layui-btn layui-btn-normal layui-btn-mini">已启用</span></td>
             <td class="td-manage">
 <!--              <a onclick="member_stop(this,'10001')" href="javascript:;"  title="启用">
                 <i class="layui-icon">&#xe601;</i>
               </a>-->
-                <a title="分配角色"  href="{{url('admin/user/role/'.$v->user_id)}}">
-                    <i class="layui-icon">&#xe639;</i>
+                <a title="授权"  href="{{url('admin/role/auth/'.$v->id)}}">
+                    <i class="layui-icon">&#xe651;</i>
                 </a>
-              <a title="编辑"  onclick="x_admin_show('编辑','{{url('admin/user/'.$v->user_id.'/edit')}}',600,400)" href="javascript:;">
+              <a title="编辑"  onclick="x_admin_show('编辑','{{url('admin/role/'.$v->id.'/edit')}}',600,400)" href="javascript:;">
                 <i class="layui-icon">&#xe642;</i>
               </a>
 <!--              <a onclick="x_admin_show('修改密码','member-password.html',600,400)" title="修改密码" href="javascript:;">
                 <i class="layui-icon">&#xe631;</i>
               </a>-->
-              <a title="删除" onclick="member_del(this,{{$v->user_id}})" href="javascript:;">
+              <a title="删除" onclick="member_del(this,{{$v->id}})" href="javascript:;">
                 <i class="layui-icon">&#xe640;</i>
               </a>
             </td>
@@ -95,7 +92,7 @@
         </tbody>
       </table>
       <div class="page">
-        {!! $user->appends($request->all())->render() !!}
+        {!! $role->appends($request->all())->render() !!}
       </div>
 
     </div>
@@ -138,11 +135,11 @@
           });
       }
 
-      /*用户-删除*/
+      /*角色-删除*/
       function member_del(obj,id){
           layer.confirm('确认要删除吗？',function(index){
               //发异步删除数据
-              $.post('/admin/user/'+id,{"_method":"delete","_token":"{{csrf_token()}}"},function(data){
+              $.post('/admin/role/'+id,{"_method":"delete","_token":"{{csrf_token()}}"},function(data){
                   if(data.status == 0){
                       $(obj).parents("tr").remove();
                       layer.msg(data.message,{icon:6,time:1000});
@@ -163,7 +160,7 @@
         })
         layer.confirm('确认要删除吗？',function(index){
             //捉到所有被选中的，发异步进行删除
-            $.get('/admin/user/del',{'ids':ids},function(data){
+            $.get('/admin/role/del',{'ids':ids},function(data){
                 if(data.status == 0){
                     $(".layui-form-checked").not('.header').parents('tr').remove();
                     layer.msg(data.message,{icon:6,time:1000});

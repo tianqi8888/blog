@@ -17,8 +17,25 @@ Route::group(['prefix'=>'admin','namespace'=>'Admin','middleware'=>'isLogin'],fu
     Route::get('welcome','LoginController@welcome');
     //退出登录
     Route::get('logout','LoginController@logout');
+    //用户批量删除
     Route::get('user/del','UserController@delAll');
+    //用户分配角色
+    Route::get('user/role/{id}','UserController@role');
+    //处理用户角色
+    Route::post('user/dorole','UserController@dorole');
     //用户模块
     Route::resource('user','UserController');
+    //角色批量删除
+    Route::get('role/del','RoleController@delAll');
+    //角色授权路由
+    Route::get('role/auth/{id}','RoleController@auth');
+    //处理角色授权
+    Route::post('role/doauth','RoleController@doauth');
+    //角色模块
+    Route::resource('role','RoleController');
+    //权限模块
+    Route::resource('permission','PermissionController');
+    //权限批量删除
+    Route::get('permission/del','PermissionController@delAll');
 });
 

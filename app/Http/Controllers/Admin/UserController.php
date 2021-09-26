@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Model\Role;
 use App\Model\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -9,6 +10,35 @@ use Illuminate\Support\Facades\Crypt;
 
 class UserController extends Controller
 {
+    //给用户分配角色页
+    public function role($id){
+        //当前用户信息
+        $user = User::find($id);
+        //所有角色
+        $roles = Role::get();
+        //当前用户所属角色
+        $own_roles = $user->roles;
+        $ownRole = [];
+        foreach($own_roles as $v){
+            $ownRole[] = $v->id;
+        }
+        //dd($own_roles);
+        return view('admin.user.roles',compact('user','roles','ownRole'));
+    }
+
+    //处理用户角色
+    public function dorole(Request $request){
+        $input = $request->except('_token');
+        //删除当前用户已有的角色
+        \DB::table('user_role')->where('user_id',$input['user_id'])->delete();
+        //添加新授予的角色
+        if(!empty($input['role_id'])){
+            foreach($input['role_id'] as $v){
+                \DB::table('user_role')->insert(['user_id'=>$input['user_id'],'role_id'=>$v]);
+            }
+        }
+        return redirect('admin/user');
+    }
     //获取用户列表
     public function index(Request $request)
     {
