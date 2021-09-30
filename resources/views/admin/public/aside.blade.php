@@ -55,9 +55,9 @@
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <a _href="cate.html">
+                        <a _href="{{url('admin/cate')}}">
                             <i class="iconfont">&#xe6a7;</i>
-                            <cite>多级分类</cite>
+                            <cite>分类列表</cite>
                         </a>
                     </li >
                 </ul>

@@ -1,4 +1,5 @@
 <?php
+//不需要登录就可以访问路由组
 Route::group(['prefix'=>'admin','namespace'=>'Admin'],function(){
     //登录页
     Route::get('login','LoginController@login');
@@ -9,8 +10,14 @@ Route::group(['prefix'=>'admin','namespace'=>'Admin'],function(){
     //验证码路由
     Route::get('code','LoginController@code');
 });
+
+//验证码组件写法
 Route::get('code/captcha/{tmp}','Admin\LoginController@captcha');
-Route::group(['prefix'=>'admin','namespace'=>'Admin','middleware'=>'isLogin'],function(){
+//无权限
+Route::get('noaccess','Admin\LoginController@noaccess');
+
+//需要权限并且已登录才可访问的路由组
+Route::group(['prefix'=>'admin','namespace'=>'Admin','middleware'=>['isLogin','hasRole']],function(){
     //首页
     Route::get('index','LoginController@index');
     //欢迎页
@@ -37,5 +44,7 @@ Route::group(['prefix'=>'admin','namespace'=>'Admin','middleware'=>'isLogin'],fu
     Route::resource('permission','PermissionController');
     //权限批量删除
     Route::get('permission/del','PermissionController@delAll');
+    //分类模块
+    Route::resource('cate','CateController');
 });
 

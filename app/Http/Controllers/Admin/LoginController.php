@@ -125,4 +125,9 @@ class LoginController extends Controller
         session()->flush();
         return redirect('admin/login');
     }
+
+    //没有权限对应跳转页面
+    public function noaccess(){
+        return view('errors.noaccess');
+    }
 }
