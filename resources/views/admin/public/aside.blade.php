@@ -65,6 +65,27 @@
             <li>
                 <a href="javascript:;">
                     <i class="iconfont">&#xe723;</i>
+                    <cite>文章管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="{{url('admin/article')}}">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>文章列表</cite>
+                        </a>
+                    </li >
+                    <li>
+                        <a _href="{{url('admin/article/create')}}">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>文章添加</cite>
+                        </a>
+                    </li >
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <i class="iconfont">&#xe723;</i>
                     <cite>城市联动</cite>
                     <i class="iconfont nav_right">&#xe697;</i>
                 </a>

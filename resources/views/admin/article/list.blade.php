@@ -3,7 +3,7 @@
   
   <head>
     <meta charset="UTF-8">
-    <title>分类列表</title>
+    <title>用户列表</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
@@ -36,17 +36,18 @@
           <div class="layui-input-inline">
             <select name="num" lay-filter="aihao">
               <option value=""></option>
-              <option value="3" @if($request->input('num') == 3) selected @endif >3</option>
-              <option value="5" @if($request->input('num') == 5) selected @endif>5</option>
+              <option value="3" >3</option>
+              <option value="5" >5</option>
             </select>
           </div>
-          <input type="text" name="cate_name" value="{{$request->input('cate_name')}}"  placeholder="请输入分类名称" autocomplete="off" class="layui-input">
+          <input type="text" name="username" value=""  placeholder="请输入用户名" autocomplete="off" class="layui-input">
+          <input type="text" name="email" value=""  placeholder="邮箱" autocomplete="off" class="layui-input">
           <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
         </form>
       </div>
       <xblock>
         <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
-        <button class="layui-btn" onclick="x_admin_show('添加用户','{{url('admin/cate/create')}}',600,400)"><i class="layui-icon"></i>添加</button>
+        <button class="layui-btn" onclick="x_admin_show('添加文章','{{url('admin/article/create')}}',600,400)"><i class="layui-icon"></i>添加</button>
         <span class="x-right" style="line-height:40px">共有数据：88 条</span>
       </xblock>
       <table class="layui-table">
@@ -56,44 +57,45 @@
               <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
             </th>
             <th>ID</th>
-            <th>分类名称</th>
-            <th>分类标题</th>
+            <th>用户名</th>
+            <th>邮箱</th>
             <th>状态</th>
             <th>操作</th></tr>
         </thead>
         <tbody>
-        @foreach($cates as $v)
+
           <tr>
             <td>
-                <div class="layui-input-inline" style="width:30px">
-                    <input type="text" onchange="changeOrder(this,{{$v->cate_id}})" name="cate_order" value="{{$v->cate_order}}"  class="layui-input">
-                </div>
+              <div class="layui-unselect layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
             </td>
-            <td>{{ $v->cate_id }}</td>
-            <td>{{ $v->cate_name }}</td>
-            <td>{{ $v->cate_title }}</td>
+            <td></td>
+            <td></td>
+            <td></td>
             <td class="td-status">
               <span class="layui-btn layui-btn-normal layui-btn-mini">已启用</span></td>
             <td class="td-manage">
 <!--              <a onclick="member_stop(this,'10001')" href="javascript:;"  title="启用">
                 <i class="layui-icon">&#xe601;</i>
               </a>-->
-              <a title="编辑"  onclick="x_admin_show('编辑','{{url('admin/cate/'.$v->cate_id.'/edit')}}',600,400)" href="javascript:;">
+                <a title="分配角色"  href="">
+                    <i class="layui-icon">&#xe639;</i>
+                </a>
+              <a title="编辑"  onclick="x_admin_show('编辑','',600,400)" href="javascript:;">
                 <i class="layui-icon">&#xe642;</i>
               </a>
 <!--              <a onclick="x_admin_show('修改密码','member-password.html',600,400)" title="修改密码" href="javascript:;">
                 <i class="layui-icon">&#xe631;</i>
               </a>-->
-              <a title="删除" onclick="member_del(this,{{$v->cate_id}})" href="javascript:;">
+              <a title="删除" onclick="member_del(this)" href="javascript:;">
                 <i class="layui-icon">&#xe640;</i>
               </a>
             </td>
           </tr>
-          @endforeach
+
         </tbody>
       </table>
       <div class="page">
-        {{--{!! $cates->appends($request->all())->render() !!}--}}
+
       </div>
 
     </div>
@@ -111,19 +113,6 @@
           elem: '#end' //指定元素
         });
       });
-
-      function changeOrder(obj,id){
-          var order_id = $(obj).val();
-          $.post('/admin/cate/changeorder',{'_token':"{{csrf_token()}}","cate_id":id,"order_id":order_id},function(data){
-              if(data.status == 0){
-                  layer.msg(data.message,{icon:6},function(){
-                      location.reload();
-                  });
-              }else{
-                  layer.msg(data.message,{icon:5});
-              }
-          });
-      }
 
        /*用户-停用*/
       function member_stop(obj,id){
@@ -153,7 +142,7 @@
       function member_del(obj,id){
           layer.confirm('确认要删除吗？',function(index){
               //发异步删除数据
-              $.post('/admin/cate/'+id,{"_method":"delete","_token":"{{csrf_token()}}"},function(data){
+              $.post('/admin/user/'+id,{"_method":"delete","_token":"{{csrf_token()}}"},function(data){
                   if(data.status == 0){
                       $(obj).parents("tr").remove();
                       layer.msg(data.message,{icon:6,time:1000});
@@ -174,7 +163,7 @@
         })
         layer.confirm('确认要删除吗？',function(index){
             //捉到所有被选中的，发异步进行删除
-            $.get('/admin/cate/del',{'ids':ids},function(data){
+            $.get('/admin/user/del',{'ids':ids},function(data){
                 if(data.status == 0){
                     $(".layui-form-checked").not('.header').parents('tr').remove();
                     layer.msg(data.message,{icon:6,time:1000});

@@ -8,11 +8,31 @@ use App\Http\Controllers\Controller;
 
 class CateController extends Controller
 {
+    //修改排序
+    public function changeOrder(Request $request){
+        $input = $request->except('_token');
+        $cate = Cate::find($input['cate_id']);
+        $res = $cate->update(['cate_order'=>$input['order_id']]);
+        if($res){
+            $data = [
+                'status'=>0,
+                'message'=>'排序成功'
+            ];
+        }else{
+            $data = [
+                'status'=>1,
+                'message'=>'排序失败'
+            ];
+        }
+        return $data;
+    }
+
     //分类列表
-    public function index()
+    public function index(Request $request)
     {
-        $cates = Cate::get();
-        return view('admin/cate/list',compact('cates'));
+        $cates = (new Cate())->tree($request);
+        //dd($cates);
+        return view('admin/cate/list',compact('cates','request'));
     }
 
     //分类添加页面

@@ -46,5 +46,11 @@ Route::group(['prefix'=>'admin','namespace'=>'Admin','middleware'=>['isLogin','h
     Route::get('permission/del','PermissionController@delAll');
     //分类模块
     Route::resource('cate','CateController');
+    //修改分类排序
+    Route::post('cate/changeorder','CateController@changeOrder');
+    //文章模块
+    Route::resource('article','ArticleController');
+    //缩略图上传
+    Route::post('article/upload','ArticleController@upload');
 });
 
