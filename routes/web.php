@@ -54,3 +54,7 @@ Route::group(['prefix'=>'admin','namespace'=>'Admin','middleware'=>['isLogin','h
     Route::post('article/upload','ArticleController@upload');
 });
 
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
